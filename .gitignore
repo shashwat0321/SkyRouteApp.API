@@ -427,3 +427,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# ASP.NET Core environment-specific settings (may contain secrets)
+appsettings.Development.json

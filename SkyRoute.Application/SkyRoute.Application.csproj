@@ -16,12 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="DTOs\" />
     <Folder Include="DTOs\Request\" />
-    <Folder Include="DTOs\Response\" />
-    <Folder Include="Mappers\" />
     <Folder Include="Validators\" />
     <Folder Include="Common\" />
     <Folder Include="Common\Exceptions\" />

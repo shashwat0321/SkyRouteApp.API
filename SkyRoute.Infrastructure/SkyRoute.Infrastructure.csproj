@@ -21,10 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="Data\Configurations\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Repositories\Interfaces\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

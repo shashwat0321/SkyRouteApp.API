@@ -1,0 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SkyRoute.Domain.Entities;
+
+namespace SkyRoute.Infrastructure.Data.Configurations
+{
+    public class AirportConfiguration : IEntityTypeConfiguration<Airport>
+    {
+        public void Configure(EntityTypeBuilder<Airport> builder)
+        {
+            builder.Property(a => a.Code).IsRequired().HasMaxLength(10);
+            builder.Property(a => a.Name).IsRequired().HasMaxLength(200);
+            builder.Property(a => a.City).IsRequired().HasMaxLength(100);
+            builder.Property(a => a.Country).IsRequired().HasMaxLength(100);
+
+            builder.HasIndex(a => a.Code).IsUnique();
+        }
+    }
+}
