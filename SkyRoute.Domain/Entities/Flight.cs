@@ -1,32 +1,24 @@
-﻿using SkyRoute.Domain.Common;
+using SkyRoute.Domain.Common;
 using SkyRoute.Domain.Enums;
 
 namespace SkyRoute.Domain.Entities
 {
     public class Flight : BaseEntity
     {
-        public string FlightNumber { get; set; }
+        public int FlightScheduleId { get; set; }
+        public FlightSchedule FlightSchedule { get; set; }
 
-        public int AirlineId { get; set; }
-        public Airline Airline { get; set; }  // NOT string
+        public DateTime FlightDate { get; set; }
 
-        public int DepartureAirportId { get; set; }
-        public Airport DepartureAirport { get; set; }
-
-        public int ArrivalAirportId { get; set; }
-        public Airport ArrivalAirport { get; set; }
-
-        public DateTime DepartureTime { get; set; }
-        public DateTime ArrivalTime { get; set; }
-
-        // Start with Economy only
-        public int TotalSeats { get; set; }
-        public int AvailableSeats { get; set; }
-        public decimal Price { get; set; }
-
-        // TODO Phase 2: Add BusinessSeats, BusinessPrice
+        public int EconomyAvailable { get; set; }
+        public int BusinessAvailable { get; set; }
+        public int FirstClassAvailable { get; set; }
 
         public FlightStatus Status { get; set; }
+
+        // Concurrency token — used to prevent duplicate instance creation / overbooking
+        public byte[] RowVersion { get; set; }
+
         public List<Booking> Bookings { get; set; }
     }
 }

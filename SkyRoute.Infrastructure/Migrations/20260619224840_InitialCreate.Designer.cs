@@ -12,7 +12,7 @@ using SkyRoute.Infrastructure.Data;
 namespace SkyRoute.Infrastructure.Migrations
 {
     [DbContext(typeof(SkyRouteDbContext))]
-    [Migration("20260618075042_InitialCreate")]
+    [Migration("20260619224840_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -107,6 +107,9 @@ namespace SkyRoute.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CabinClass")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -148,16 +151,65 @@ namespace SkyRoute.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BusinessAvailable")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EconomyAvailable")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FirstClassAvailable")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FlightDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FlightScheduleId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlightScheduleId", "FlightDate")
+                        .IsUnique();
+
+                    b.ToTable("Flights");
+                });
+
+            modelBuilder.Entity("SkyRoute.Domain.Entities.FlightSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("AirlineId")
                         .HasColumnType("int");
 
                     b.Property<int>("ArrivalAirportId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ArrivalTime")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeOnly>("ArrivalTime")
+                        .HasColumnType("time");
 
-                    b.Property<int>("AvailableSeats")
+                    b.Property<decimal>("BusinessBasePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BusinessSeats")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -166,21 +218,36 @@ namespace SkyRoute.Infrastructure.Migrations
                     b.Property<int>("DepartureAirportId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DepartureTime")
+                    b.Property<TimeOnly>("DepartureTime")
+                        .HasColumnType("time");
+
+                    b.Property<decimal>("EconomyBasePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EconomySeats")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EffectiveFrom")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EffectiveTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("FirstClassBasePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("FirstClassSeats")
+                        .HasColumnType("int");
 
                     b.Property<string>("FlightNumber")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Status")
+                    b.Property<int>("OperatingDays")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalSeats")
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -194,7 +261,7 @@ namespace SkyRoute.Infrastructure.Migrations
 
                     b.HasIndex("DepartureAirportId");
 
-                    b.ToTable("Flights");
+                    b.ToTable("FlightSchedules");
                 });
 
             modelBuilder.Entity("SkyRoute.Domain.Entities.Passenger", b =>
@@ -316,8 +383,19 @@ namespace SkyRoute.Infrastructure.Migrations
 
             modelBuilder.Entity("SkyRoute.Domain.Entities.Flight", b =>
                 {
-                    b.HasOne("SkyRoute.Domain.Entities.Airline", "Airline")
+                    b.HasOne("SkyRoute.Domain.Entities.FlightSchedule", "FlightSchedule")
                         .WithMany("Flights")
+                        .HasForeignKey("FlightScheduleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FlightSchedule");
+                });
+
+            modelBuilder.Entity("SkyRoute.Domain.Entities.FlightSchedule", b =>
+                {
+                    b.HasOne("SkyRoute.Domain.Entities.Airline", "Airline")
+                        .WithMany("Schedules")
                         .HasForeignKey("AirlineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -354,7 +432,7 @@ namespace SkyRoute.Infrastructure.Migrations
 
             modelBuilder.Entity("SkyRoute.Domain.Entities.Airline", b =>
                 {
-                    b.Navigation("Flights");
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("SkyRoute.Domain.Entities.Booking", b =>
@@ -365,6 +443,11 @@ namespace SkyRoute.Infrastructure.Migrations
             modelBuilder.Entity("SkyRoute.Domain.Entities.Flight", b =>
                 {
                     b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("SkyRoute.Domain.Entities.FlightSchedule", b =>
+                {
+                    b.Navigation("Flights");
                 });
 
             modelBuilder.Entity("SkyRoute.Domain.Entities.User", b =>

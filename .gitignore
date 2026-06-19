@@ -430,3 +430,7 @@ FodyWeavers.xsd
 
 # ASP.NET Core environment-specific settings (may contain secrets)
 appsettings.Development.json
+
+# Local dev settings and project-specific files (excluded from repo)
+CLAUDE_CODE_INSTRUCTIONS.md
+project_structure.txt

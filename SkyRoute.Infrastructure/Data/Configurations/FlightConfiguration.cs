@@ -8,21 +8,19 @@ namespace SkyRoute.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Flight> builder)
         {
-            builder.Property(f => f.FlightNumber).IsRequired().HasMaxLength(20);
-            builder.Property(f => f.TotalSeats).IsRequired();
-            builder.Property(f => f.AvailableSeats).IsRequired();
-            builder.Property(f => f.Price).IsRequired().HasColumnType("decimal(18,2)");
+            builder.Property(f => f.FlightDate).IsRequired();
+
+            builder.Property(f => f.EconomyAvailable).IsRequired();
+            builder.Property(f => f.BusinessAvailable).IsRequired();
+            builder.Property(f => f.FirstClassAvailable).IsRequired();
+
             builder.Property(f => f.Status).IsRequired();
 
-            builder.HasOne(f => f.DepartureAirport)
-                .WithMany()
-                .HasForeignKey(f => f.DepartureAirportId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // Concurrency token
+            builder.Property(f => f.RowVersion).IsRowVersion();
 
-            builder.HasOne(f => f.ArrivalAirport)
-                .WithMany()
-                .HasForeignKey(f => f.ArrivalAirportId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // One flight instance per schedule per date
+            builder.HasIndex(f => new { f.FlightScheduleId, f.FlightDate }).IsUnique();
 
             builder.HasMany(f => f.Bookings)
                 .WithOne(b => b.Flight)

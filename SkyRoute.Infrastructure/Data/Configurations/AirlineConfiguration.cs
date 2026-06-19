@@ -12,11 +12,6 @@ namespace SkyRoute.Infrastructure.Data.Configurations
             builder.Property(a => a.Code).IsRequired().HasMaxLength(10);
 
             builder.HasIndex(a => a.Code).IsUnique();
-
-            builder.HasMany(a => a.Flights)
-                .WithOne(f => f.Airline)
-                .HasForeignKey(f => f.AirlineId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

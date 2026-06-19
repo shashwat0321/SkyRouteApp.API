@@ -16,7 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Request\" />
     <Folder Include="Validators\" />
     <Folder Include="Common\" />
     <Folder Include="Common\Exceptions\" />

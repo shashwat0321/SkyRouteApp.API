@@ -9,6 +9,7 @@ namespace SkyRoute.Infrastructure.Data
         public DbSet<Airline> Airlines { get; set; }
         public DbSet<Airport> Airports { get; set; }
         public DbSet<Flight> Flights { get; set; }
+        public DbSet<FlightSchedule> FlightSchedules { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Passenger> Passengers { get; set; }
 

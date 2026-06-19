@@ -1,4 +1,4 @@
-﻿using SkyRoute.Domain.Common;
+using SkyRoute.Domain.Common;
 using SkyRoute.Domain.Enums;
 
 namespace SkyRoute.Domain.Entities
@@ -10,6 +10,8 @@ namespace SkyRoute.Domain.Entities
 
         public int FlightId { get; set; }
         public Flight Flight { get; set; }
+
+        public CabinClass CabinClass { get; set; }
 
         public int NumberOfSeats { get; set; }
         public decimal TotalPrice { get; set; }
