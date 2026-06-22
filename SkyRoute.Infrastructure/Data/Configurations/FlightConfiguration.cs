@@ -20,7 +20,7 @@ namespace SkyRoute.Infrastructure.Data.Configurations
             builder.Property(f => f.RowVersion).IsRowVersion();
 
             // One flight instance per schedule per date
-            builder.HasIndex(f => new { f.FlightScheduleId, f.FlightDate }).IsUnique();
+            builder.HasIndex(f => new { f.FlightScheduleId, f.FlightDate }).IsUnique();  // can also prevent race condition **
 
             builder.HasMany(f => f.Bookings)
                 .WithOne(b => b.Flight)
