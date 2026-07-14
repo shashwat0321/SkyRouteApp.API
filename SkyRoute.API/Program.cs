@@ -29,6 +29,9 @@ builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IAirportService, AirportService>();
 
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 builder.Services.AddScoped<IFlightProvider, GlobalWingsProvider>();
 builder.Services.AddScoped<IFlightProvider, BudgetWingsProvider>();
 

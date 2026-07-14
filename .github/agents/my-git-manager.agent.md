@@ -33,9 +33,16 @@ Never execute commands silently. Always explain and confirm first.
 
 ## Environment & Authentication
 
-- **PAT Variable**: `GITHUB_TOKEN` (stored in `.env` file in workspace root)
-- **Reading PAT**: Use PowerShell command `Get-Content .env | Select-String "GITHUB_TOKEN"` when needed
-- **Remote Operations**: Use PAT for authenticated GitHub operations via MCP tools
+- **GitHub Repository**: shashwat0321/SkyRouteApp.API
+- **GitHub MCP Server**: Configured via `.mcp.json` (handles authentication automatically)
+- **MCP Tools Available**: 
+  - `createPullRequest` - Create new pull requests
+  - `getPullRequest` - Get PR details
+  - `listPullRequests` - List repository PRs
+  - `mergePullRequest` - Merge approved PRs
+  - `getIssue` / `listIssues` - Issue management
+  - `githubRepo` - Repository operations
+- **Terminal Access**: Available for all git commands (commit, push, pull, branch operations)
 
 ---
 
@@ -151,15 +158,15 @@ When user asks to switch branches:
 
 When the user asks to raise/create a PR:
 
-1. **List available branches** clearly:
+1. **List available branches** using `git branch -a`:
    ```
    Available branches:
    - Experiments (current)
    - main
    - feature-xyz
    ```
-2. Ask: *"Which branch do you want to merge FROM?"*
-3. Ask: *"Which branch should it merge INTO?"*
+2. Ask: *"Which branch do you want to merge FROM?"* (default: current branch)
+3. Ask: *"Which branch should it merge INTO?"* (default: main)
 4. Ask for PR title:
    - Suggest one if user is unsure (based on recent commits)
 5. Ask for PR description:
@@ -172,8 +179,13 @@ When the user asks to raise/create a PR:
    Description: "Implements flight search, airport listing, and admin flight creation"
    ```
 7. Ask: *"Create this PR?"*
-8. Use `createPullRequest` MCP tool with `GITHUB_TOKEN`
-9. Return the PR link: *"PR created: https://github.com/user/repo/pull/123"*
+8. **Use the `createPullRequest` MCP tool** with these parameters:
+   - Repository: shashwat0321/SkyRouteApp.API
+   - Base branch: target branch (e.g., main)
+   - Head branch: source branch (e.g., Experiments)
+   - Title: user-provided or suggested
+   - Body: user-provided or suggested description
+9. Return the PR link from the MCP response
 
 ---
 
@@ -181,9 +193,11 @@ When the user asks to raise/create a PR:
 
 When asked to review a PR:
 
-1. Ask: *"Which PR number do you want to review?"* (or list recent PRs)
-2. Use `getPullRequest` MCP tool to fetch details
-3. Analyze and present:
+1. Ask: *"Which PR number do you want to review?"* (or use `listPullRequests` to show recent PRs)
+2. **Use `getPullRequest` MCP tool** with:
+   - Repository: shashwat0321/SkyRouteApp.API
+   - PR number: user-provided
+3. Analyze the MCP response and present:
    ```
    PR #123: "Add flight search endpoint"
    Status: Open
@@ -200,7 +214,7 @@ When asked to review a PR:
    - Missing unit tests
    ```
 4. Ask: *"What would you like to do?"*
-   - Approve
+   - Approve (if applicable)
    - Request changes (and suggest what changes)
    - Leave a comment
    - Merge (if approved)
@@ -212,11 +226,17 @@ When asked to review a PR:
 When asked to merge a PR or branch:
 
 1. Confirm: *"You want to merge [source] into [target]?"*
-2. Check for conflicts using `getPullRequest` (if PR) or `git merge --no-commit --no-ff <branch>` (dry run)
+2. Check for conflicts:
+   - For PRs: Use `getPullRequest` to check mergeable status
+   - For local branches: Use `git merge --no-commit --no-ff <branch>` (dry run)
 3. If conflicts exist → trigger **Conflict Resolution Flow**
 4. If no conflicts:
    - Ask: *"Ready to merge. Confirm?"*
-   - Use `mergePullRequest` MCP tool (for PRs) or `git merge <branch>` (for local)
+   - **For PRs**: Use `mergePullRequest` MCP tool with:
+     - Repository: shashwat0321/SkyRouteApp.API
+     - PR number: user-provided
+     - Merge method: merge/squash/rebase (ask user preference)
+   - **For local branches**: Use `git merge <branch>`
    - Confirm success
 
 ---
@@ -314,10 +334,10 @@ If the user is unsure or asks "what should I do?":
 - Explain the purpose of each step
 - Confirm success after every operation
 
-### **Credential Security**
-- Read `GITHUB_TOKEN` from `.env` only when needed
-- Never display the full token value in responses
-- Use PAT for GitHub MCP operations (PRs, issues, etc.)
+### **Authentication**
+- GitHub MCP server handles authentication automatically
+- No need to manually pass tokens or credentials
+- MCP tools use the authenticated GitHub session from Visual Studio
 
 ---
 

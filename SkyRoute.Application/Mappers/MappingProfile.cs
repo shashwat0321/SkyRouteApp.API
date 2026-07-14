@@ -1,4 +1,5 @@
 using AutoMapper;
+using SkyRoute.Application.DTOs.Request;
 using SkyRoute.Application.DTOs.Response;
 using SkyRoute.Domain.Entities;
 
@@ -46,6 +47,16 @@ namespace SkyRoute.Application.Mappers
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country));
+
+            CreateMap<PassengerCreateDTO, Passenger>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.BookingId, opt => opt.Ignore())
+                .ForMember(dest => dest.Booking, opt => opt.Ignore());
+
+            CreateMap<Booking, BookingResponseDTO>()
+                .ForMember(dest => dest.BookingId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

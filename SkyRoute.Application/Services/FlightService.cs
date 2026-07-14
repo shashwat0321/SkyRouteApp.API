@@ -54,9 +54,7 @@ namespace SkyRoute.Application.Services
                 EconomyAvailable = schedule.EconomySeats,
                 BusinessAvailable = schedule.BusinessSeats,
                 FirstClassAvailable = schedule.FirstClassSeats,
-                Status = FlightStatus.Scheduled,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                Status = FlightStatus.Scheduled
             };
 
             var createdFlight = await _flightRepo.AddFlightAsync(flight);
